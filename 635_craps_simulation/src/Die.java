@@ -1,3 +1,12 @@
+	
+/*
+*********************************************************************************************************
+Die_____FairDie___UnfairDie 
+
+___UnfairDie__UnfairDieOutputsThree__UnfairDieIncrementsLastRoll___
+Die__UnfairDieOutputsThree__UnfairDieIncrementsLastRoll___
+********************************************************************************************************* 
+ */
 
 public class Die
 {
@@ -16,7 +25,6 @@ public class Die
 
 	public int getLastRoll() // getter or accessor method
 	{
-
 		return this.lastRoll;
 	}
 

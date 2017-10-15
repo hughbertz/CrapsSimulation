@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 
 /**
+ * Run Multiple Simulations of CrapsGame (class)
+ * Stats: GamesWon, GamesLost (in multiple Simulations)
+ * 
  * Starting application for running multiple simulations of CrapsGame. This
  * gathers statistics (how many games were a win, and how many were a loss), and
  * prints out the results.
@@ -47,8 +50,9 @@ public class CrapsSimulation
 	 * exactly k rolls: <code>winsteps[k]==w </code>, out of
 	 * <code>numPlays</code> total plays.
 	 */
+	//	 * we still dont really get what this is
 	private int[] winForNumberOfStepsOf = new int[100];
-	private ArrayList<Integer> test;
+	//private ArrayList<Integer> test;
 
 	/**
 	 * int array field <code>lossSteps</code> racks number of losses l after
@@ -68,9 +72,96 @@ public class CrapsSimulation
 
 		// we'll use the above to substitute Die subclass objects,
 		// thus affecting the outcome
-	
+		this.winForNumberOfStepsOf = new int[100];
 	}
 
+	
+	
+	public CrapsGame getGame()
+	{
+		return this.game;
+	}
+
+
+
+	public void setGame(CrapsGame game)
+	{
+		this.game = game;
+	}
+
+	public void setGame()
+	{
+		this.game = new CrapsGame();
+	}
+
+
+	public int getNumberOfWins()
+	{
+		return this.numberOfWins;
+	}
+
+
+
+	public void setNumberOfWins(int numberOfWins)
+	{
+		this.numberOfWins = numberOfWins;
+	}
+
+
+
+	public int getNumPlays()
+	{
+		return this.numPlays;
+	}
+
+
+
+	public void setNumPlays(int numPlays)
+	{
+		this.numPlays = numPlays;
+	}
+
+
+
+	public int[] getWinForNumberOfStepsOf()
+	{
+		return this.winForNumberOfStepsOf;
+	}
+
+
+
+	public void setWinForNumberOfStepsOf(int[] winForNumberOfStepsOf)
+	{
+		this.winForNumberOfStepsOf = winForNumberOfStepsOf;
+	}
+
+
+
+	public int[] getLossSteps()
+	{
+		return this.lossSteps;
+	}
+
+	private int winsAtRollIndex(int numSteps)
+	{
+		return getWinForNumberOfStepsOf()[numSteps];
+	}
+
+	public void setLossSteps(int[] lossSteps)
+	{
+		this.lossSteps = lossSteps;
+	}
+
+	private boolean playOneGame()
+	{
+		return getGame().playOneGame(getWinForNumberOfStepsOf(), getLossSteps());
+	}
+
+	private void incrementWins()
+	{
+		int wins = getNumberOfWins()+1;
+		setNumberOfWins(wins);
+	}
 	/**
 	 * Instance method <code>public void play(int)</code> plays n games of
 	 * craps, tracking the results of each: number of total wins out of n, and
@@ -83,13 +174,13 @@ public class CrapsSimulation
 
 	public void play(int gamesToPlay)
 	{
-		this.numPlays 	= gamesToPlay;
-		this.numberOfWins 			= 0;
-		for (int i = 0; i < this.numPlays; i++)
+		setNumPlays(gamesToPlay);
+		setNumberOfWins(0);
+		for (int i = 0; i < getNumPlays(); i++)
 		{
-			if(this.game.playOneGame(winForNumberOfStepsOf, lossSteps))
+			if(playOneGame())
 			{
-				this.numberOfWins++;
+				incrementWins();
 			}
 		}
 	}
@@ -106,18 +197,21 @@ public class CrapsSimulation
 	public void reportStats()
 	{
 		StdOut.println("\nNumber of (wins,losses) for games of given length follow:\n");
-		for (int numSteps = 1; numSteps < winForNumberOfStepsOf.length; numSteps++)
+		for (int rollIndex = 1; rollIndex < getWinForNumberOfStepsOf().length; rollIndex++)
 		{
-			StdOut.println("(wins,losses) ending at " + numSteps + " roll" + ((numSteps > 1) ? "s" : "") + ": (" + winForNumberOfStepsOf[numSteps] + ","
-					+ lossSteps[numSteps] + ")");
+			StdOut.println("(wins,losses) in " + rollIndex + " roll" + ((rollIndex > 1) ? "s" : "") + ": (" + winsAtRollIndex(rollIndex) + ","
+					+ lossSteps[rollIndex] + ")");
 		}
 		
-		StdOut.println("\nPlayed " + this.numPlays + " games total.");
+		StdOut.println("\nPlayed " + getNumPlays() + " games total.");
 		
-		StdOut.println("Won " + this.numberOfWins + "/" + this.numPlays + "==" + 100.0 * (0.0 + numberOfWins) / this.numPlays + "%");
-
+		StdOut.println("Won " + getNumberOfWins() + "/" + getNumPlays() + "==" + 100.0 * (0.0 + getNumberOfWins()) / getNumPlays() + "%");
 	}
 
+	
+
+	
+	
 	/**
 	 * TestCraps.main():
 	 * 
@@ -127,18 +221,17 @@ public class CrapsSimulation
 	 * We turn off console output by CrapsGame.showOutput = false, so that the
 	 * simulation runs more quickly, then turn it back on to report the results
 	 */
-	public static final int NUM_TO_PLAY = 1000000;
+	public static final int NUMBER_OF_SIMULATIONS = 1000000;
 
 	public static void main(String[] args)
 	{
 		CrapsSimulation crapsSimulation = new CrapsSimulation();
 
-		StdOut.println("Starting simulation of " + NUM_TO_PLAY + " games...");
+		StdOut.println("Starting simulation of " + NUMBER_OF_SIMULATIONS + " games...");
 
-		CrapsGame.showOutput = false; // turn off output to speed up
-		// simulation
+		CrapsGame.setShowOutput(false); // turn off output to speed up simulation
 
-		crapsSimulation.play(NUM_TO_PLAY); // play games of craps
+		crapsSimulation.play(NUMBER_OF_SIMULATIONS); // play games of craps
 
 		StdOut.println("Done.");
 

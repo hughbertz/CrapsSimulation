@@ -13,9 +13,13 @@ public class CrookedDie2 extends Die // subclassing
 		int testRoll = getLastRoll();
 
 		if (testRoll == 6)
+		{
 			this.setLastRoll(1);
+		}
 		else
+		{
 			this.setLastRoll(testRoll + 1);
+		}
 	}
 
 	public String toString()
